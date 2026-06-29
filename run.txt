@@ -1,0 +1,12 @@
+./venv/bin/python3 -m py_compile patrol_and_detect.py
+
+docker rm -f ardupilot-sitl && docker run -dit --name ardupilot-sitl --add-host=host.docker.internal:host-gateway orthuk/ardupilot-sitl-debian ./Tools/autotest/sim_vehicle.py -v ArduCopter -I0 --custom-location=37.8016,-122.4648,10,0 --out=udp:host.docker.internal:14550
+
+docker logs --tail 10 ardupilot-sitl
+
+./venv/bin/python3 -u patrol_and_detect.py \
+  --address "udpin://127.0.0.1:14550" \
+  --video-source "video-samples/stadium--3.mp4" \
+  --video-start-frame 2350 \
+  --no-video
+  

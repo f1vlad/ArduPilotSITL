@@ -216,3 +216,20 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ==========================================
+# Project Specific Rules
+# ==========================================
+
+# YOLO model weights (automatically downloaded at runtime)
+*.pt
+
+# Local flight test outputs
+test-flight/
+test-flight-debug/
+
+# Raw video samples (large binaries)
+video-samples/
+
+# macOS system files
+.DS_Store
