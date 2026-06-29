@@ -164,3 +164,49 @@ python3 patrol_and_detect.py \
 | `--mock` | *Disabled* | Runs a simulated flight trajectory and telemetry flow |
 | `--no-video` | *Disabled* | Suppresses OpenCV graphical window display (for headless setups) |
 | `--altitude` | `10.0` | Target patrol altitude in meters |
+
+---
+
+## Hawthorne-Feather Airpark (8B1) Autonomous Flight
+
+This section describes the parallel workspace setup for manual and autonomous flight testing at **Hawthorne-Feather Airpark (8B1)** (location `43.062722, -71.904925`).
+
+### 1. Docker Setup for Hawthorne-Feather Airpark (8B1)
+To start the simulator at the airpark location with dual outputs (port 14550 for QGroundControl and 14540 for Python/MAVSDK scripts):
+```bash
+docker rm -f ardupilot-sitl && docker run -dit --name ardupilot-sitl \
+  --add-host=host.docker.internal:host-gateway \
+  orthuk/ardupilot-sitl-debian \
+  ./Tools/autotest/sim_vehicle.py -v ArduCopter -I0 \
+  --custom-location=43.062722,-71.904925,0,0 \
+  --out=udp:host.docker.internal:14550 \
+  --out=udp:host.docker.internal:14540
+```
+
+### 2. Manual Flight Verification (QGroundControl)
+1. Launch **QGroundControl** on your Mac.
+2. It will automatically connect to the UDP stream on port `14550`.
+3. The satellite view map will show the quadcopter on the runway of Hawthorne-Feather Airpark in New Hampshire.
+4. You can use the QGC GUI buttons to Arm, Takeoff, fly guided waypoints, and Land manually.
+
+### 3. Running the Python Script Modes
+The [hawthorne_flight.py](file:///Users/f1vlad/git/ArduPilotSITL/hawthorne_flight.py) script supports two execution modes:
+
+#### Option A: QGroundControl Telemetry Monitor Mode
+Connects to the simulator and passively prints real-time telemetry updates in your terminal while you command the drone manually from the QGroundControl GUI:
+```bash
+python3 hawthorne_flight.py --args=qgroundcontrol
+```
+
+#### Option B: Programmatic Autonomous Flight Mode
+Loads [flight_instructions.yaml](file:///Users/f1vlad/git/ArduPilotSITL/flight_instructions.yaml), validates the starting location, translates the instructions into GPS targets, and flies the route autonomously:
+```bash
+python3 hawthorne_flight.py --args=programmatic --file=flight_instructions.yaml
+```
+
+#### Script Arguments
+* `--address`: MAVLink connection port (default: `udpin://127.0.0.1:14540`)
+* `--args`: Execution mode choice: `qgroundcontrol` or `programmatic` (default: `programmatic`)
+* `--file`: Path to the YAML instruction file (default: `flight_instructions.yaml`, only used in programmatic mode)
+
+

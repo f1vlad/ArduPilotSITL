@@ -1,0 +1,26 @@
+start_location:
+  latitude: 43.062722
+  longitude: -71.904925
+
+commands:
+  - action: arm
+  - action: takeoff
+    altitude: 50
+    unit: feet
+  - action: fly
+    distance: 1000
+    unit: feet
+    direction: south
+  - action: fly
+    distance: 500
+    unit: feet
+    direction: west
+  - action: fly
+    distance: 1000
+    unit: feet
+    direction: north
+  - action: fly
+    distance: 500
+    unit: feet
+    direction: east
+  - action: land

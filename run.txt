@@ -10,3 +10,10 @@ docker logs --tail 10 ardupilot-sitl
   --video-start-frame 2350 \
   --no-video
   
+---
+
+./venv/bin/python3 -m py_compile hawthorne_flight.py
+
+source venv/bin/activate
+python3 hawthorne_flight.py --args=qgroundcontrol
+python3 hawthorne_flight.py --args=programmatic --file=flight_instructions.yaml
